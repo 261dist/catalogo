@@ -49,7 +49,7 @@ git clone https://github.com/miorg/mi-repo.git
 cd mi-repo
 ```
 
-Paso 2: Una vez en su proyecto, actualice su local y crea tu rama de trabajo
+Paso 2: Una vez en su proyecto, actualice su *main* local por si hay cambios, y crea tu rama de trabajo para tu nueva tarea
 
 ```console
 git branch
@@ -62,7 +62,7 @@ git commit -m "feat: doc linea de soft i"
 git push -u origin tarea/deploy-doc-vi
 ```
 
-Paso 3: Hacer PR en GitHub Web y luego elimina tu rama de trabajo
+Paso 3: Hacer PR en GitHub Web. Luego, muévate al *main* y luego elimina tu rama de trabajo
 
 ```console
 git checkout main
@@ -71,7 +71,7 @@ git branch -d tarea/deploy-doc-vi
 git push origin --delete tarea/deploy-doc-vi
 ```
 
-Paso 4: Crea tu nueva rama para continuar con la segunda tarea, y repita desde el paso 2. 
+Paso 4: Repita el paso 2 y crea tu nueva rama para continuar con la segunda tarea. 
 Ejemplo:
 
 ```console
