@@ -160,6 +160,9 @@ mvnw.cmd spring-boot:run
 ```powershell
 .\mvnw.cmd spring-boot:run
 ```
+```powershell
+mvn spring-boot:run
+```
 
 - Linux / WSL:
 
