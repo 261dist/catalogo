@@ -1,93 +1,32 @@
-# catalogo
+# 📦 Microservicio Catálogo
 
-Microservicio Spring Boot para la gestión del catálogo. Actualmente expone un CRUD REST para la entidad `Categoria` y cuenta con documentación OpenAPI/Swagger.
+Este proyecto implementa el **Microservicio Catálogo**, responsable de gestionar entidades del dominio dentro de una arquitectura de microservicios en evolución.
 
-## Stack
+---
 
-- Java 17
-- Spring Boot 3.5.12
-- Spring Web
-- Spring Data JPA
-- Spring Validation
-- Spring Boot Actuator
-- Springdoc OpenAPI
-- Flyway (core + mysql)
-- MySQL
-- Lombok
-- Maven Wrapper (opcional)
+## 🧱 Estado del proyecto
 
-## Estructura del proyecto
+Actualmente incluye:
 
-El proyecto sigue una arquitectura en capas simple:
+- API REST funcional
+- Persistencia con MySQL
+- Configuración por perfiles (`dev`, `prod`)
+- Contenerización con Docker
+- Preparado para integración con:
+  - Config Server
+  - Eureka
+  - API Gateway
 
-- `controller`: expone los endpoints REST
-- `service`: define contratos de negocio
-- `service.impl`: implementa la lógica de negocio
-- `repository`: acceso a datos con Spring Data JPA
-- `entity`: entidades persistentes
-- `dto`: objetos request/response
-- `mapper`: conversión manual entre entidad y DTO
-- `exception`: manejo global de errores
-- `config`: configuración técnica, incluyendo OpenAPI
+---
 
+## 🏗️ Arquitectura (visión)
 
-Plantilla y guías
------------------
-
-- Repositorio plantilla: https://github.com/261dist/catalogo/
-- Documentación operativa transversal: https://upeuoficial.github.io/carrera-sistemas-docs-operativos/
-- Estándar de codificación: https://upeuoficial.github.io/carrera-sistemas-docs-operativos/lineas/software/estandares/politica-codificacion/
-- Política de ramas y PR: https://upeuoficial.github.io/carrera-sistemas-docs-operativos/lineas/software/estandares/politica-ramas-pr/
-
-Manual de PR con GitHub Web
-
-Paso 1: Crear el repo en GitHub, de preferencia dentro de una organización
-El repo debe ser creado con sólo el README.md, por ejemplo: mi-repo
-
-```console
-git clone https://github.com/miorg/mi-repo.git
-cd mi-repo
+```text
+Client → Gateway → Microservicios → Eureka → Config Server
 ```
 
-Paso 2: Una vez en su proyecto, actualice su *main* local por si hay cambios, y crea tu rama de trabajo para tu nueva tarea
+Este repositorio implementa únicamente el microservicio **Catálogo**.
 
-```console
-git branch
-git pull origin main
-git checkout -b tarea/deploy-doc-vi
-# Hacer el trabajo i
-git branch
-git add .
-git commit -m "feat: doc linea de soft i"
-git push -u origin tarea/deploy-doc-vi
-```
-
-Paso 3: Hacer PR en GitHub Web. Luego, muévate al *main* y luego elimina tu rama de trabajo
-
-```console
-git checkout main
-git pull origin main
-git branch -d tarea/deploy-doc-vi
-git push origin --delete tarea/deploy-doc-vi
-```
-
-Paso 4: Repita el paso 2 y crea tu nueva rama para continuar con la segunda tarea. 
-Ejemplo:
-
-```console
-git branch
-git pull origin main
-git checkout -b tarea/deploy-doc-v2
-# Hacer el trabajo 2
-git branch
-git add .
-git commit -m "feat: doc linea de soft 2"
-git push -u origin tarea/deploy-doc-v2
-git checkout main
-git pull origin main
-git branch -d tarea/deploy-doc-v2
-git push origin --delete tarea/deploy-doc-v2
-```
 Ubicación recomendada para clases/equipos:
 
 - Cada microservicio (`catalogo`, `producto`, `[otro-ms]`) vive en su propio repositorio Git.
@@ -107,205 +46,60 @@ ProyectosMS2026/
     [otro-ms]/
 ```
 
-## Requisitos
+---
 
-- JDK 17
-- Maven no es obligatorio, porque el proyecto incluye `mvnw` y `mvnw.cmd`
-- MySQL 8.4 (via Docker Compose o instalación local)
+## ⚙️ Stack tecnológico base 2026
 
-Ver sección "Guía rápida" → "Paso obligatorio: Levanta la BD primero" para instrucciones de setup.
 
-## Guía rápida para alumnos (autoestudio)
+- Java 17
+- Spring Boot 3.5.x
+- Maven 3.9+
+- MySQL 8 (dentro de docker)
+- Docker
+- Docker Compose
 
-**Importante**: Todos los comandos siguientes se ejecutan desde dentro de la carpeta `catalogo` (donde está el `pom.xml`).
-
-### Paso obligatorio: Levanta la BD primero
-
-La aplicación necesita MySQL disponible. Antes de hacer cualquier cosa, levanta la base de datos usando una de estas opciones:
-
-**Opción A: Con Docker (recomendado)**
+Antes de ejecutar el proyecto, asegúrate de tener instalado:
 
 ```bash
-docker compose -f docker-compose-dev.yml up -d
+java -version
+mvn -v
+docker -v
+docker compose version
 ```
+## Dependencias
 
-Espera ~3 segundos a que MySQL esté listo (verifica con `docker ps`).
+- Spring Web
+- Spring Data JPA
+- Validation
+- Lombok
+- MySQL Driver
+- Flyway
+- Spring Boot Actuator
+- Spring Boot DevTools
+- SpringDoc OpenAPI Web (Swagger)
 
-**Opción B: Con Laragon, XAMPP, o MySQL local**
 
-- Asegúrate de que MySQL esté corriendo en tu máquina local.
-- Verifica la configuración en `src/main/resources/application-dev.yml` (host, puerto, usuario, contraseña).
-- Confirma que la BD `db_catalogo` existe.
+---
 
-### Sigue este flujo en orden para trabajar sin depender del docente:
+## 🔌 Puertos utilizados
 
-1. Ejecutar la aplicación en `dev` (elige una opción):
+| Servicio            | Puerto expuesto |
+|--------------------|--------|
+| Aplicación (dev)   | 8081   |
+| Aplicación (prod)  | 8082   |
+| MySQL (dev)        | 3307   |
+| MySQL (prod)       | 3308   |
 
-**Opción 1 (recomendada - VS Code):**
-- Abre archivo `src/main/java/com/upeu/catalogo/CatalogoApplication.java`
-- Haz clic en el botón `Run` (▶) que aparece sobre la clase
-- El servicio inicia con perfil `dev` automáticamente
-- No necesitas escribir `mvn` ni `./mvnw` manualmente
+---
 
-**Opción 2 (terminal con Maven Wrapper):**
+## 🔄 Diferencia entre DEV y PROD
 
-- Windows (CMD):
+| Modo | Ejecución           | Base de datos | Puerto |
+|------|--------------------|--------------|--------|
+| DEV  | Maven              | Docker       | 8081   |
+| PROD | Docker Compose     | Docker       | 8082   |
 
-```bat
-mvnw.cmd spring-boot:run
-```
-
-- Windows (PowerShell):
-
-```powershell
-.\mvnw.cmd spring-boot:run
-```
-```powershell
-mvn spring-boot:run
-```
-
-- Linux / WSL:
-
-```bash
-./mvnw spring-boot:run
-```
-
-2. Verificar que está corriendo:
-
-- Swagger: `http://localhost:8081/swagger-ui.html`
-- Health: `http://localhost:8081/actuator/health`
-
-3. Probar CRUD de `Categoria` en Swagger o Postman.
-
-4. Ejecutar pruebas (opcional): ver sección `Pruebas`.
-
-Checklist mínimo antes de entregar tareas:
-
-- BD levantada y corriendo (`docker ps` muestra el contenedor)
-- Las pruebas pasan (`BUILD SUCCESS`)
-- La app inicia sin errores
-- Los endpoints CRUD responden correctamente
-- Si hubo cambios de BD, existe script SQL versionado
-
-## Cómo usar este proyecto como plantilla base
-
-Para crear un nuevo microservicio (por ejemplo, `producto`) a partir de `catalogo`:
-
-1. Crear un nuevo repositorio para el microservicio y usar `catalogo` como plantilla base.
-2. Cambiar `spring.application.name` en `src/main/resources/application.yml`.
-3. Ajustar puertos para evitar conflicto con `catalogo` (app y MySQL).
-4. Crear nuevas entidades/DTOs/servicios/controladores manteniendo la misma arquitectura por capas.
-5. Crear script SQL inicial de la nueva tabla en `src/main/resources/db/migration`.
-6. Validar con pruebas y ejecución local.
-
-Recomendación para clases:
-
-- Mantener este repo como “base estable”.
-- Cada alumno o equipo trabaja en una copia (`producto`, `ventas`, etc.) sin romper la plantilla original.
-
-## Configuración actual
-
-Perfil activo por defecto:
-
-- `dev`
-- Se activa automáticamente al ejecutar con `Run` en VS Code o con `mvn spring-boot:run` en local
-
-Puertos por entorno:
-
-- `dev` (Java local): `8081`
-- `prod` (Docker): `8082`
-
-Configuración datasource en desarrollo:
-
-- Host: `localhost`
-- Puerto: `3307`
-- Base de datos: `db_catalogo`
-- Usuario: `root`
-
-Configuración por entorno:
-
-- Base: `src/main/resources/application.yml`
-- Dev: `src/main/resources/application-dev.yml`
-- Prod: `src/main/resources/application-prod.yml`
-
-Política actual de base de datos:
-
-- `dev`: JPA con `ddl-auto: update` y Flyway deshabilitado
-- `prod`: Flyway habilitado y JPA con `ddl-auto: validate`
-- El equipo trabaja con enfoque `DB-first`: los cambios de esquema deben quedar versionados en SQL
-
-Para `docker-compose` de prod se usan variables desde `.env` (plantilla en `.env.example`).
-
-Paso obligatorio antes de correr `prod`:
-
-- Crear el archivo `.env` a partir de `.env.example` (el `.env` no se sube a GitHub).
-- Windows (PowerShell): `Copy-Item .env.example .env`
-- Linux/WSL: `cp .env.example .env`
-- Luego ajustar valores de `.env` según tu entorno.
-- Validación rápida: antes de `docker compose up -d`, confirma que existe `.env` en la raíz del proyecto.
-
-## Ejecución en paralelo (recomendado)
-
-Este repositorio está preparado para correr `dev` y `prod` al mismo tiempo sin conflicto:
-
-- `dev` app local: `8081`
-- `prod` app docker: `8082`
-- `dev` mysql docker: `3307`
-- `prod` mysql docker: `3308`
-
-Comandos:
-
-```bash
-# DB de desarrollo
-docker compose -f docker-compose-dev.yml up -d
-
-# Stack productivo local (app + db)
-docker compose up -d
-```
-
-Para futuros microservicios (`producto`, `ventas`, `clientes`, etc.), usa el mismo patrón con puertos distintos y nombres de proyecto distintos.
-
-## URLs y Documentación
-
-**Modo `dev` (local)**:
-- Swagger: `http://localhost:8081/swagger-ui.html`
-- Health: `http://localhost:8081/actuator/health`
-- API Categorias: `http://localhost:8081/api/v1/categorias`
-
-**Modo `prod` (Docker)**:
-- API Categorias: `http://localhost:8082/api/v1/categorias`
-- Health: `http://localhost:8082/actuator/health`
-- Swagger: deshabilitado
-
-## Pruebas
-
-Ejecutar pruebas:
-
-```bat
-mvnw.cmd test
-```
-
-En PowerShell (Windows), usar:
-
-```powershell
-.\mvnw.cmd test
-```
-
-En Linux / WSL:
-
-```bash
-./mvnw test
-```
-
-Estado validado actual:
-
-- `BUILD SUCCESS`
-- `Tests run: 8, Failures: 0, Errors: 0, Skipped: 0`
-
-Nota:
-
-- Actualmente las pruebas se ejecutan de forma manual con Maven (`mvnw.cmd test` o `./mvnw test`).
-- En este repositorio no hay pipeline CI/CD activo en GitHub Actions.
+---
 
 ## Base de datos y migraciones
 
@@ -325,3 +119,356 @@ Flujo recomendado del equipo:
 5. Arrancar la app en `prod` y validar
 
 No modificar scripts ya ejecutados; crear siempre una nueva versión.
+
+# 🚀 Ejecución en modo desarrollo (dev)
+
+## 🔹 1. Clonar repositorio - rama inicial
+
+Ejemplo:
+
+```bash
+git clone git clone --branch vs01-arquitectura-base https://github.com/261dist/catalogo.git
+
+cd catalogo
+```
+
+---
+
+## 🔹 2. Levantar base de datos
+
+```bash
+docker compose -f docker-compose-dev.yml up
+```
+**Si no tienes Docker, otra opción es con Laragon, XAMPP, o MySQL local**
+
+- Asegúrate de que MySQL esté corriendo en tu máquina local.
+- Verifica la configuración en `src/main/resources/application-dev.yml` (host, puerto, usuario, contraseña).
+- Confirma que la BD `db_catalogo` existe.
+
+
+---
+
+## 🔹 3. Ejecutar aplicación
+
+```bash
+mvn spring-boot:run
+```
+
+👉 Perfil activo: `dev`
+
+---
+
+## 🌐 Acceso DEV
+Swagger:
+```
+http://localhost:8081/swagger-ui.html
+```
+Health: 
+```
+http://localhost:8081/actuator/health
+```
+
+---
+
+# 🐳 Ejecución en modo producción (prod)
+
+## 🔹 1. Crear archivo `.env`
+
+```env
+CATALOGO_MYSQL_ROOT_PASSWORD=root
+CATALOGO_MYSQL_DATABASE=db_catalogo
+
+SPRING_PROFILES_ACTIVE=prod
+
+CATALOGO_DB_HOST=mysql-catalogo
+CATALOGO_DB_PORT=3306
+CATALOGO_DB_NAME=db_catalogo
+CATALOGO_DB_USERNAME=root
+CATALOGO_DB_PASSWORD=root
+```
+
+---
+
+## 🔹 2. Levantar servicios
+
+```bash
+docker compose -f docker-compose.yml up -d
+```
+
+---
+
+## 🌐 Acceso PROD
+API Categorias:
+```
+http://localhost:8082/api/v1/categorias
+```
+Health:
+```
+http://localhost:8082/actuator/health
+```
+Swagger: deshabilitado
+
+---
+
+# 📈 Escalado de la aplicación (múltiples instancias)
+
+---
+
+## 🔹 Paso 1. Detener entorno previo
+
+Antes de iniciar el escalado, detener los servicios que estuvieran levantados previamente:
+
+```bash
+docker compose -f docker-compose.yml down
+```
+Si existieran contenedores manuales anteriores, también eliminarlos:
+
+```bash
+docker rm -f catalogo1 catalogo2 catalogo3
+```
+
+---
+
+## 🔹 Paso 2. Levantar solo MySQL
+
+Levantar únicamente la base de datos del entorno de producción:
+
+```bash
+docker compose -f docker-compose.yml up -d mysql-catalogo
+```
+
+---
+
+## 🔹 Paso 3. Construir imagen
+
+Generar la imagen Docker de la aplicación:
+
+```bash
+docker build -t catalogo-service .
+```
+
+---
+
+## 🔹 Paso 4. Ejecutar instancias
+
+> ⚠️ Nota: En este escenario usamos la red por defecto creada por Docker Compose.
+
+### Instancia 1
+
+```bash
+docker run --name catalogo1 --network catalogo-net --env-file .env -p 8082:8082 catalogo-service
+```
+
+### Instancia 2
+
+```bash
+docker run --name catalogo2 --network catalogo-net --env-file .env -p 8083:8082 catalogo-service
+```
+
+---
+
+## 🔹 Paso 5. Verificar
+
+```bash
+docker ps
+```
+
+---
+
+## 🔹 Paso 6. Probar
+
+- http://localhost:8082
+- http://localhost:8083
+
+---
+
+## 🔹 Paso 7. Finalizar
+
+🧠 Tip pro 
+
+stop → apaga contenedor (como apagar servidor)
+
+rm → elimina contenedor (como borrar VM)
+
+rmi → elimina imagen (como borrar ISO/base)
+```bash
+
+docker stop catalogo1
+docker rm catalogo1
+docker rmi catalogo-service   # opcional
+```
+```bash
+docker rm -f catalogo1 catalogo2 catalogo3
+docker compose -f docker-compose.yml down
+```
+Para ver todos los servicios (incluidos apagados):
+```bash
+docker ps -a
+```
+Detener todos los contenedores
+```bash
+docker stop $(docker ps -q)
+```
+Eliminar todos los contenedores
+```bash
+docker rm $(docker ps -aq)
+```
+Eliminar todas las imágenes
+```bash
+docker rmi $(docker images -q)
+```
+🚀 Eliminar contenedores detenidos, imágenes no usadas, redes, cache
+```bash
+docker system prune -a
+```
+💣 Forma EXTREMA (incluye volúmenes)
+```bash
+docker system prune -a --volumes
+```
+---
+
+## 🔹 Ejecución sin `.env` (opcional)
+
+Bash
+```bash
+docker run -d --name catalogo1 \
+  --network catalogo-net \
+  -p 8082:8082 \
+  -e SPRING_PROFILES_ACTIVE=prod \
+  -e CATALOGO_DB_HOST=mysql-catalogo \
+  -e CATALOGO_DB_PORT=3306 \
+  -e CATALOGO_DB_NAME=db_catalogo \
+  -e CATALOGO_DB_USERNAME=root \
+  -e CATALOGO_DB_PASSWORD=root \
+  catalogo-service
+```
+PS
+```ps
+docker run --name catalogo3 --network catalogo-net -p 8084:8082 `
+  -e SPRING_PROFILES_ACTIVE=prod `
+  -e CATALOGO_DB_HOST=mysql-catalogo `
+  -e CATALOGO_DB_PORT=3306 `
+  -e CATALOGO_DB_NAME=db_catalogo `
+  -e CATALOGO_DB_USERNAME=root `
+  -e CATALOGO_DB_PASSWORD=root `
+  catalogo-service
+```
+
+---
+
+# 🔗 Integración futura
+
+## Config Server
+
+```properties
+SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:7071
+```
+
+## Eureka
+
+```properties
+EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://registry-server:8761/eureka
+```
+
+## Gateway
+
+```yaml
+uri: lb://catalogo
+```
+
+---
+
+# ⚠️ Alcance actual
+
+Este proyecto NO incluye aún:
+
+- API Gateway
+- Eureka
+- Config Server
+- Balanceador
+
+---
+
+# 🧠 Concepto clave
+
+Este proyecto es un microservicio que:
+
+- es independiente
+- puede escalar
+- se integrará progresivamente
+
+---
+
+# 📌 Nota final
+
+Este repositorio forma parte de una arquitectura de microservicios en evolución.
+
+# 🔧 ANEXO PR (lujo de trabajo con Git)
+
+Este flujo permite trabajar con ramas, enviar cambios y versionar el proyecto de forma ordenada.
+
+---
+
+## 🔹 1. Actualizar repositorio
+
+```bash
+git branch
+git pull origin main
+```
+
+---
+
+## 🔹 2. Crear rama de trabajo y hacer el trabajo
+
+```bash
+git checkout -b tarea/avance
+```
+###  ATENCIÓN: NO codees sin hacer los 2 pasos anteriores
+
+
+
+## 🔹 3. Realizar cambios
+
+```bash
+git add .
+git commit -m "feat: avance"
+git push -u origin tarea/avance
+```
+
+---
+
+## 🔹 4. Volver a main y limpiar rama
+
+```bash
+git checkout main
+git pull origin main
+
+git branch -d tarea/avance
+git push origin --delete tarea/avance
+```
+
+---
+
+## 🔹 5. Crear tag (versión estable)
+
+```bash
+git tag -a vs01 -m "versión estable"
+git push origin vs01
+```
+
+---
+
+## 🔹 6. Eliminar tag (si es necesario)
+
+```bash
+git tag -d vs01
+git push origin --delete vs01
+```
+
+---
+
+## 📚 Documentación adicional
+
+Ver documentación operativa en:
+
+👉 https://upeuoficial.github.io/carrera-sistemas-docs-operativos/
