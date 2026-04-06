@@ -14,15 +14,15 @@ Actualmente incluye:
 - Contenerizacion con Docker
 - Integracion operativa con **Config Server**
 - Integracion operativa con **Registry Server (Eureka)**
-- Preparado para integracion con:
-  - **API Gateway (siguiente paso)**
+- Integracion operativa con **API Gateway**
+- Enrutamiento dinamico con **`lb://catalogo`**
 
 ---
 
 ## Arquitectura (estado actual)
 
 ```text
-Client -> API Gateway (pendiente) -> Microservicios -> Registry Server -> Config Server
+Client -> API Gateway -> Microservicios -> Registry Server -> Config Server
 ```
 
 Este repositorio implementa unicamente el microservicio **Catalogo**.
@@ -58,6 +58,8 @@ Este repositorio implementa unicamente el microservicio **Catalogo**.
 | Config Server PROD | 7072 |
 | Registry Server DEV | 8761 |
 | Registry Server PROD | 8762 |
+| Gateway DEV | 9090 |
+| Gateway PROD | 9091 |
 
 ---
 
@@ -341,31 +343,51 @@ http://localhost:8084/api/v1/categorias
 
 ---
 
+# Gateway + Load Balance (trabajado)
+
+Orden aplicado durante la implementacion:
+
+1. Crear o clonar repo `infra` desde el tag `vs03-registry-server` y repo `catalogo` tambien desde `vs03-registry-server`.
+2. Crear proyecto `gateway` en `infra`.
+3. Conectar `gateway` a Config Server.
+4. Probar `gateway` en DEV.
+5. Suscribir `gateway` a Eureka en modo DEV.
+6. Definir ruta: `uri: lb://catalogo`.
+7. Escalado en DEV con multiples instancias.
+8. Configurar `gateway` para PROD.
+9. Probar `gateway` en PROD.
+10. Levantar varias instancias de `catalogo` en PROD y probar.
+11. Revision de escalado automatico.
+
+---
+
 # Estado de avance
 
 - [x] Config Server
 - [x] Registry Server (Eureka)
-- [ ] API Gateway
-- [ ] Enrutamiento `lb://catalogo`
+- [x] API Gateway
+- [x] Enrutamiento `lb://catalogo`
+- [ ] Feign
 - [ ] Circuit Breaker
-- [ ] Seguridad
 - [ ] Balanceador externo
+- [ ] Seguridad
 
 ---
 
 # Siguiente paso
 
-Implementar **API Gateway** para:
+Continuar con atributos de calidad sobre la base actual:
 
-- enrutar trafico a servicios registrados
-- usar descubrimiento dinamico (`lb://catalogo`)
-- preparar balanceo entre multiples instancias
+- implementar comunicacion entre microservicios con Feign
+- agregar resiliencia con Circuit Breaker
+- formalizar estrategia de balanceador externo
+- integrar seguridad
 
 ---
 
 # Tag sugerido
 
 ```bash
-git tag -a vs03-registry-server -m "Catalogo integrado con Registry Server"
-git push origin vs03-registry-server
+git tag -a vs04-gateway-lb -m "Catalogo integrado con API Gateway y enrutamiento lb://catalogo"
+git push origin vs04-gateway-lb
 ```
