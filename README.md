@@ -52,14 +52,14 @@ Este repositorio implementa unicamente el microservicio **Catalogo**.
 |---|---:|
 | Catalogo DEV | 8081 |
 | Catalogo PROD | 8082 |
-| MySQL DEV | 3307 |
-| MySQL PROD | 3308 |
+| MySQL DEV | 3381 |
+| MySQL PROD | 3382 |
 | Config Server DEV | 7071 |
 | Config Server PROD | 7072 |
-| Registry Server DEV | 8761 |
-| Registry Server PROD | 8762 |
-| Gateway DEV | 9090 |
-| Gateway PROD | 9091 |
+| Registry Server DEV | 7081 |
+| Registry Server PROD | 7082 |
+| Gateway DEV | 7091 |
+| Gateway PROD | 7092 |
 
 ---
 
@@ -107,7 +107,7 @@ mvn spring-boot:run
 Dashboard:
 
 ```text
-http://localhost:8761
+http://localhost:7081
 ```
 
 ---
@@ -140,10 +140,22 @@ Swagger UI:
 http://localhost:8081/swagger-ui/index.html
 ```
 
+Endpoint de instancia:
+
+```text
+http://localhost:8081/api/v1/catalogo/instancia
+```
+
+Acceso via Gateway DEV:
+
+```text
+http://localhost:7091/api/v1/catalogo/instancia
+```
+
 Registro en Eureka:
 
 ```text
-http://localhost:8761
+http://localhost:7081
 ```
 
 ---
@@ -160,6 +172,7 @@ Prueba la segunda instancia:
 
 ```text
 http://localhost:8085/swagger-ui/index.html
+http://localhost:8085/api/v1/catalogo/instancia
 ```
 
 ---
@@ -184,7 +197,7 @@ Pruebas:
 
 ```text
 http://localhost:7072/catalogo/prod
-http://localhost:8762
+http://localhost:7082
 ```
 
 ---
@@ -235,10 +248,22 @@ API:
 http://localhost:8082/api/v1/categorias
 ```
 
+Endpoint de instancia:
+
+```text
+http://localhost:8082/api/v1/catalogo/instancia
+```
+
+Acceso via Gateway PROD:
+
+```text
+http://localhost:7092/api/v1/catalogo/instancia
+```
+
 Eureka PROD (host):
 
 ```text
-http://localhost:8762
+http://localhost:7082
 ```
 
 ---
@@ -254,8 +279,8 @@ infra/config-repo/catalogo-prod.yml
 
 Puntos clave ya configurados:
 
-- `catalogo-dev.yml` usa `eureka.client.service-url.defaultZone=http://localhost:8761/eureka`
-- `catalogo-prod.yml` usa `eureka.client.service-url.defaultZone=http://registry-server:8761/eureka`
+- `catalogo-dev.yml` usa `eureka.client.service-url.defaultZone=http://localhost:7081/eureka`
+- `catalogo-prod.yml` usa `eureka.client.service-url.defaultZone=http://registry-server:7081/eureka`
 
 ---
 
@@ -329,6 +354,15 @@ docker start catalogo3
 http://localhost:8082/api/v1/categorias
 http://localhost:8083/api/v1/categorias
 http://localhost:8084/api/v1/categorias
+http://localhost:8082/api/v1/catalogo/instancia
+http://localhost:8083/api/v1/catalogo/instancia
+http://localhost:8084/api/v1/catalogo/instancia
+```
+
+Si quieres validar balanceo por Gateway, repite varias veces:
+
+```text
+http://localhost:7092/api/v1/catalogo/instancia
 ```
 
 ---
@@ -369,8 +403,10 @@ Orden aplicado durante la implementacion:
 - [x] Enrutamiento `lb://catalogo`
 - [ ] Feign
 - [ ] Circuit Breaker
-- [ ] Balanceador externo
 - [ ] Seguridad
+- [ ] Gestion del trafico (filtros, politicas y control de peticiones)
+- [ ] Observabilidad y trazabilidad
+- [ ] Integracion con frontend
 
 ---
 
@@ -380,14 +416,16 @@ Continuar con atributos de calidad sobre la base actual:
 
 - implementar comunicacion entre microservicios con Feign
 - agregar resiliencia con Circuit Breaker
-- formalizar estrategia de balanceador externo
-- integrar seguridad
+- integrar seguridad con autenticacion y autorizacion
+- aplicar gestion del trafico en Gateway
+- fortalecer observabilidad y trazabilidad entre servicios
+- habilitar integracion con frontend
 
 ---
 
 # Tag sugerido
 
 ```bash
-git tag -a vs04-gateway-lb -m "Catalogo integrado con API Gateway y enrutamiento lb://catalogo"
-git push origin vs04-gateway-lb
+git tag -a vs04-gateway-lb-r2 -m "Catalogo integrado con API Gateway, endpoint de instancia y documentacion actualizada"
+git push origin vs04-gateway-lb-r2
 ```

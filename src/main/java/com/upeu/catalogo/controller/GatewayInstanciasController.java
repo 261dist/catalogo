@@ -7,30 +7,39 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/catalogo")
 public class GatewayInstanciasController {
 
-	private final Environment environment;
-/*
-	@GetMapping("/instancia")
-	public Map<String, String> instancia() throws UnknownHostException {
-		return Map.of(
-				"app", "catalogo",
-				"port", environment.getProperty("local.server.port"),
-				"host", InetAddress.getLocalHost().getHostName()
-		);
-	}*/
+    private final Environment environment;
+
     @GetMapping("/instancia")
     public Map<String, String> instancia() {
         return Map.of(
-                "app", "catalogo",
+                "app", environment.getProperty("spring.application.name", "catalogo"),
                 "port", environment.getProperty("local.server.port", "N/A"),
-                "host", environment.getProperty("HOSTNAME", "desconocido")
+                "host", obtenerHost()
         );
+    }
+
+    private String obtenerHost() {
+        String hostname = environment.getProperty("HOSTNAME");
+        if (hostname != null && !hostname.isBlank()) {
+            return hostname;
+        }
+
+        String computerName = environment.getProperty("COMPUTERNAME");
+        if (computerName != null && !computerName.isBlank()) {
+            return computerName;
+        }
+
+        try {
+            return InetAddress.getLocalHost().getHostName();
+        } catch (Exception e) {
+            return "desconocido";
+        }
     }
 }
