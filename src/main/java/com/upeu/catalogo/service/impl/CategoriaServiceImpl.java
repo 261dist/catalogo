@@ -48,6 +48,7 @@ public class CategoriaServiceImpl implements CategoriaService {
     @Transactional(readOnly = true)
     public CategoriaResponse findById(Long id) {
         log.info("Buscando categoría con ID: {}", id);
+        log.info("[CATALOGO] Buscando categoria id={}", id);
         Categoria categoria = getCategoriaById(id);
         log.info("Categoría encontrada: {} (ID: {})", categoria.getNombre(), id);
         return categoriaMapper.toResponse(categoria);

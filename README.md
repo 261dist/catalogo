@@ -16,6 +16,7 @@ Actualmente incluye:
 - Integracion operativa con **Registry Server (Eureka)**
 - Integracion operativa con **API Gateway**
 - Enrutamiento dinamico con **`lb://catalogo`**
+- Observabilidad basica manual para salud, metricas y logs
 
 ---
 
@@ -69,6 +70,25 @@ Este repositorio implementa unicamente el microservicio **Catalogo**.
 |---|---|---|---|---|---:|
 | DEV | `mvn spring-boot:run` | Docker/local | Config Server DEV | Registry DEV | 8081 |
 | PROD | Docker | Docker | Config Server PROD | Registry PROD | 8082 |
+
+---
+
+## Observabilidad actual
+
+`catalogo` participa en la observabilidad basica manual del sistema con:
+
+- `GET /actuator/health`
+- `GET /actuator/metrics`
+- `GET /api/v1/catalogo/instancia`
+- logs con `traceId` en consola y archivo local
+
+Archivo de log en desarrollo:
+
+- `services/catalogo/logs/catalogo.log`
+
+Para la guia didactica paso a paso de observabilidad, evaluacion y evidencia transversal entre `gateway`, `producto` y `catalogo`, revisar:
+
+- [SESION-06.P2-OBSERVABILIDAD.md](C:/ms1/ProyectosMS2026/infra/SESION-06.P2-OBSERVABILIDAD.md)
 
 ---
 
@@ -401,11 +421,12 @@ Orden aplicado durante la implementacion:
 - [x] Registry Server (Eureka)
 - [x] API Gateway
 - [x] Enrutamiento `lb://catalogo`
+- [x] Observabilidad basica manual
+- [ ] Observabilidad con herramientas
 - [ ] Feign
 - [ ] Circuit Breaker
 - [ ] Seguridad
 - [ ] Gestion del trafico (filtros, politicas y control de peticiones)
-- [ ] Observabilidad y trazabilidad
 - [ ] Integracion con frontend
 
 ---
@@ -416,9 +437,11 @@ Continuar con atributos de calidad sobre la base actual:
 
 - implementar comunicacion entre microservicios con Feign
 - agregar resiliencia con Circuit Breaker
+- centralizar metricas con Prometheus
+- centralizar logs con Loki
+- visualizar observabilidad con Grafana
 - integrar seguridad con autenticacion y autorizacion
 - aplicar gestion del trafico en Gateway
-- fortalecer observabilidad y trazabilidad entre servicios
 - habilitar integracion con frontend
 
 ---
@@ -426,6 +449,6 @@ Continuar con atributos de calidad sobre la base actual:
 # Tag sugerido
 
 ```bash
-git tag -a vs04-gateway-lb-r2 -m "Catalogo integrado con API Gateway, endpoint de instancia y documentacion actualizada"
-git push origin vs04-gateway-lb-r2
+git tag -a vs06-obs-r2 -m "Catalogo con observabilidad basica manual y documentacion actualizada"
+git push origin vs06-obs-r2
 ```
