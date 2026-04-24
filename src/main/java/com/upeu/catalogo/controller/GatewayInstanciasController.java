@@ -1,6 +1,7 @@
 package com.upeu.catalogo.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.slf4j.MDC;
 import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,10 +20,16 @@ public class GatewayInstanciasController {
     @GetMapping("/instancia")
     public Map<String, String> instancia() {
         return Map.of(
-                "app", environment.getProperty("spring.application.name", "catalogo"),
-                "port", environment.getProperty("local.server.port", "N/A"),
-                "host", obtenerHost()
+                "servicio", environment.getProperty("spring.application.name", "catalogo"),
+                "instancia", environment.getProperty("local.server.port", "N/A"),
+                "host", obtenerHost(),
+                "traceId", obtenerTraceId()
         );
+    }
+
+    private String obtenerTraceId() {
+        String traceId = MDC.get("traceId");
+        return traceId != null && !traceId.isBlank() ? traceId : "N/A";
     }
 
     private String obtenerHost() {
