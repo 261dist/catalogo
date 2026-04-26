@@ -17,6 +17,7 @@ Actualmente incluye:
 - Integracion operativa con **API Gateway**
 - Enrutamiento dinamico con **`lb://catalogo`**
 - Observabilidad basica manual para salud, metricas y logs
+- Integracion lista para observabilidad externa con Prometheus, Loki y Grafana
 
 ---
 
@@ -73,12 +74,25 @@ Este repositorio implementa unicamente el microservicio **Catalogo**.
 
 ---
 
+## Ubicacion en la secuencia 2026-2
+
+`catalogo` participa principalmente en:
+
+- `S1-S4` como microservicio base, configurable, registrable y enrutable por Gateway
+- `S6` como servicio remoto consumido por `producto`
+- `S7` como fuente de metricas, logs y trazabilidad
+
+En esta etapa, `catalogo` no implementa Feign ni Circuit Breaker, pero si forma parte del flujo distribuido que se observa y protege.
+
+---
+
 ## Observabilidad actual
 
 `catalogo` participa en la observabilidad basica manual del sistema con:
 
 - `GET /actuator/health`
 - `GET /actuator/metrics`
+- `GET /actuator/prometheus`
 - `GET /api/v1/catalogo/instancia`
 - logs con `traceId` en consola y archivo local
 
@@ -89,6 +103,14 @@ Archivo de log en desarrollo:
 Para la guia didactica paso a paso de observabilidad, evaluacion y evidencia transversal entre `gateway`, `producto` y `catalogo`, revisar:
 
 - [SESION-06.P2-OBSERVABILIDAD.md](C:/ms1/ProyectosMS2026/infra/SESION-06.P2-OBSERVABILIDAD.md)
+- [SESION-07-OBSERVABILIDAD-CON-HERRAMIENTAS.md](C:/ms1/ProyectosMS2026/observability/SESION-07-OBSERVABILIDAD-CON-HERRAMIENTAS.md)
+
+En modo productivo, `catalogo` ya queda listo para integrarse con la capa centralizada:
+
+- Prometheus consume metricas desde `/actuator/prometheus`
+- Promtail recoge `services/catalogo/logs/*.log`
+- Loki centraliza los logs
+- Grafana consulta metricas y logs desde una sola interfaz
 
 ---
 
@@ -422,7 +444,7 @@ Orden aplicado durante la implementacion:
 - [x] API Gateway
 - [x] Enrutamiento `lb://catalogo`
 - [x] Observabilidad basica manual
-- [ ] Observabilidad con herramientas
+- [x] Observabilidad con herramientas
 - [ ] Feign
 - [ ] Circuit Breaker
 - [ ] Seguridad
@@ -435,11 +457,7 @@ Orden aplicado durante la implementacion:
 
 Continuar con atributos de calidad sobre la base actual:
 
-- implementar comunicacion entre microservicios con Feign
-- agregar resiliencia con Circuit Breaker
-- centralizar metricas con Prometheus
-- centralizar logs con Loki
-- visualizar observabilidad con Grafana
+- seguir participando en el flujo distribuido observado desde `S6` y `S7`
 - integrar seguridad con autenticacion y autorizacion
 - aplicar gestion del trafico en Gateway
 - habilitar integracion con frontend
@@ -449,6 +467,6 @@ Continuar con atributos de calidad sobre la base actual:
 # Tag sugerido
 
 ```bash
-git tag -a vs06-obs-r2 -m "Catalogo con observabilidad basica manual y documentacion actualizada"
-git push origin vs06-obs-r2
+git tag -a vs07-obs-tools -m "Catalogo listo para observabilidad externa con Prometheus, Loki y Grafana"
+git push origin vs07-obs-tools
 ```

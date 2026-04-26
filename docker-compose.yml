@@ -36,6 +36,8 @@ services:
       CATALOGO_DB_PASSWORD: ${CATALOGO_DB_PASSWORD}
     ports:
       - "8082:8082"
+    volumes:
+      - ./logs:/app/logs
     networks:
       - catalogo-int
       - ms-net
